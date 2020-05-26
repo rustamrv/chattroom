@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'pgnpdgtmt4zzo#+(qkv=m&o+v1=725)0joh#mqh7l_q4g9@a6z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['chattroom.herokuapp.com', '127.0.0.1:8000']
+ALLOWED_HOSTS = ['chattroom.herokuapp.com', '127.0.0.1']
 
 AUTH_USER_MODEL = 'accounts.Profile'
 
@@ -41,11 +41,12 @@ INSTALLED_APPS = [
     'room',
     'accounts',
     'channels',
+    'chat',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,6 +76,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'project.wsgi.application'
 ASGI_APPLICATION = "project.routing.application"
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
