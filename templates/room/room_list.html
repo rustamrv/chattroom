@@ -1,16 +1,19 @@
 {% extends 'layout/base.html' %}
 
-{% block content %} 
-    {% if user.is_authenticated %} 
- <h1 class="cover-heading">Welcome, {{user.first_name}}</h1> 
- <p class="lead">Скоро тут будет чат. </p>
- 
-    {% else %}
- <h1 class="cover-heading">Welcome</h1>
-    <p class="lead">Чат в состояние разработки</p> 
- {% endif %}
- {% for item in rooms %}
-    <p>{[item.name]}
-    </p>
+
+{% block content %}
+<div class="row">     
+{% for item in rooms %} 
+
+  <div class="col-sm-4 p-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{item.name}}</h5> 
+         <small class="bd-toc-link">Автор  {{item.author}}</small> 
+        <a href="{% url 'detail' pk=item.id %}" class="btn btn-primary">Открыть</a>
+      </div>
+    </div>
+  </div>  
  {% endfor %}
+ </div>
 {% endblock content %}

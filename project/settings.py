@@ -25,7 +25,7 @@ SECRET_KEY = 'pgnpdgtmt4zzo#+(qkv=m&o+v1=725)0joh#mqh7l_q4g9@a6z'
 # SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['chattroom.herokuapp.com', '127.0.0.1']
 
@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'room',
     'accounts',
-    'channels',
-    'chat',
+    'channels', 
 ]
 
 MIDDLEWARE = [
@@ -80,10 +79,7 @@ ASGI_APPLICATION = "project.routing.application"
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": ALLOWED_HOSTS,
-        },
+        'BACKEND': 'channels_redis.core.RedisChannelLayer'
     },
 }
 

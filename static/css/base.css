@@ -57,3 +57,65 @@ dl, ol, ul {
 li{
     list-style-type: none; /* Убираем маркеры */
 }
+
+.bd-messeges{
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-top: 1px solid #eee; 
+    width: 60%;
+    height: 60%; 
+    position: fixed; 
+    overflow-x: auto; 
+    margin-top: -20%;
+    margin-left: -10%;
+    background-color: white;
+}
+
+.send{  
+    position: absolute;
+    padding-bottom: 60%;
+    display: block;
+    padding-top: 15%;
+}
+
+#text{
+    width: 700px;
+    resize: none;
+}
+
+
+#chat-message-submit{ 
+    margin-top: 1%;
+}
+
+.input-group-append {
+    padding-left: 740px;
+    margin-top: -70px;
+}
+
+.message div{
+    display: table-cell; 
+    vertical-align: middle;
+    padding:10px; 
+    color: black;
+}
+      
+.main_r{
+    margin-left: 15%;
+    /* margin: 13px; */
+}
+
+.auth{
+    margin-left: 1100px;
+    padding-top: 10px;
+}
+
+.main_msg{
+    display: inline-block;
+}
+
+time{
+    padding-left: 730px;
+}
+

@@ -3,9 +3,9 @@ from .models import Profile
 
 class EmailBackend(object):
 
-    def authenticate(self, email=None, password=None, **kwargs):
+    def authenticate(self, email=None, password=None, **kwargs): 
         try:
-            user = Profile.objects.get(email=str(email))
+            user = Profile.objects.get(email=email)
             if user.check_password(password):
                 return user, ''
             else:
