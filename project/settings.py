@@ -25,7 +25,7 @@ SECRET_KEY = 'pgnpdgtmt4zzo#+(qkv=m&o+v1=725)0joh#mqh7l_q4g9@a6z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['mrramazanovrv.pythonanywhere.com']
+ALLOWED_HOSTS = ['chattroom.herokuapp.com', '127.0.0.1:8000']
 
 AUTH_USER_MODEL = 'accounts.Profile'
 
@@ -133,9 +133,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# default static files settings for PythonAnywhere.
-# see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
-MEDIA_ROOT = '/home/mrramazanovrv/project/media'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
 MEDIA_URL = '/media/'
-STATIC_ROOT = '/home/mrramazanovrv/project/static'
-STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
