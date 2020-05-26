@@ -1,0 +1,12 @@
+{% extends 'layout/base.html' %}
+
+{% block content %} 
+    {% if user.is_authenticated %} 
+ <h1 class="cover-heading">Welcome, {{user.first_name}}</h1> 
+ <p class="lead">Скоро тут будет чат. </p>
+ 
+    {% else %}
+ <h1 class="cover-heading">Welcome</h1>
+    <p class="lead">Чат в состояние разработки</p> 
+ {% endif %}
+{% endblock content %}
