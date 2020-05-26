@@ -1,0 +1,59 @@
+body {
+    display: -ms-flexbox;
+    display: flex;
+    color: #fff;
+    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+    height: 100%;
+    background-color: #333;
+}
+
+.card{
+    color:black;
+}
+
+.log_in{
+    max-width: 50%;
+}
+
+.section-nav {
+    padding-left: 0;
+    border-left: 1px solid #eee;
+}
+
+.section-nav_room {
+    padding-left: 0;
+    border-left: 1px solid #eee;
+    margin: 0; /* Обнуляем значение отступов */
+    padding: 4px; /* Значение полей */
+} 
+
+.section-nav_msg {
+    padding-left: 0; 
+    margin: 0; /* Обнуляем значение отступов */
+    padding: 4px; /* Значение полей */
+} 
+
+ul.section-nav_room li {
+    display:inline-block;
+    border-bottom: 1px solid #eee;
+}
+ul.section-nav_msg li {
+    display:inline-block;  
+    margin-right: 40px;
+}
+
+dl, ol, ul {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.toc-entry a {
+    display: block;
+    padding: .125rem 1.5rem;
+    color:#99979c;
+}
+
+li{
+    list-style-type: none; /* Убираем маркеры */
+}
