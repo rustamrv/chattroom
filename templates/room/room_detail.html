@@ -8,11 +8,11 @@
         {% if is_member %} 
           {% for item in messages %}  
               <div class="message">
-                <div class="author_mes">{{item.sender}}</div> 
+              <div class="time"> {{item.created_date|date:"Y-m-d H:i:s"}}</div>
                   <div class="content-mes">
                     {{item.text}}
                   </div>
-                  <div class="time"> {{item.created_date|date:"Y-m-d H:i:s"}}</div>
+                    <div class="author_mes">{{item.sender}}</div> 
               </div>   
           {% endfor %} 
         {% endif %}
@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
  })
  var roomName = "{{ object.slug }}"; 
  var id_user =  "{{ id_user }}"; 
-    var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-  
-    var chatSocket = new WebSocket(ws_scheme + '://' + window.location.host + "/ws/chat/" + roomName + "/");
+ var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+ var path = ws_scheme + '://' + window.location.host + "/ws/chat/" + roomName + "/";
+ var chatSocket = new WebSocket(path);
  chatSocket.onmessage = function(e) {
      var data = JSON.parse(e.data);
      
