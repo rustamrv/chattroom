@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
  var id_user =  "{{ id_user }}"; 
  var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
  var path = ws_scheme + '://' + window.location.host + "/ws/chat/" + roomName + "/";
- var chatSocket = new WebSocket(path);
+ var chatSocket = new ReconnectingWebSocket(path);
  chatSocket.onmessage = function(e) {
      var data = JSON.parse(e.data);
      
