@@ -2,12 +2,11 @@
  {% load static %}
 
 {% block content %}  
-<h1 class="bd-title" id="content">{{ object.name }}</h1> 
+{% comment %} <h1 class="bd-title" id="content">{{ object.name }}</h1>  {% endcomment %}
    <div class="bd-messeges" id="wrapp">
-        <div class="bd-message" data-spy="scroll"  data-offset="1">  
+        <div class="bd-message" data-offset="1">  
         {% if is_member %} 
-          {% for item in messages %} 
-             {% comment %} {% read_msg item.id %}  {% endcomment %}
+          {% for item in messages %}  
               <div class="message">
                 <div class="author_mes">{{item.sender}}</div> 
                   <div class="content-mes">
