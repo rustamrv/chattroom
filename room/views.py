@@ -47,9 +47,8 @@ class ChatDetail(DetailView):
         obj = self.get_object()
         id = self.request.session.get('_auth_user_id')
         user = Profile.objects.get_id(id)
-     
         is_member = MembersRoom.objects.get_member_room(user, obj)
-        context['messages'] = Message.objects.all().filter(room=obj) 
+        context['messages'] = Message.objects.all().filter(room=obj)
         context["rooms"] = Room.objects.get_public()
         context["id_user"] = id
         context['is_member'] = is_member

@@ -14,7 +14,7 @@ class ChatConsumer(WebsocketConsumer):
         }
         self.send_message(content)
 
-    def new_message(self, data): 
+    def new_message(self, data):
         author = data['from']
         author_user = Profile.objects.get(pk=author)
         room = Room.objects.get_slug(self.room_name)
@@ -81,8 +81,8 @@ class ChatConsumer(WebsocketConsumer):
         )
 
     def send_message(self, message):
-        
         self.send(text_data=json.dumps(message))
 
-    def chat_message(self, event): 
-        self.send(text_data=json.dumps(event['message']))
+    def chat_message(self, event):
+        message = event['message']
+        self.send(text_data=json.dumps(message))
