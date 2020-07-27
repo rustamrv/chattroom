@@ -1,0 +1,46 @@
+ .container-1{
+    display: flex;
+  flex-wrap: wrap;
+  height: 100px;
+  align-content: space-between;
+}
+
+.card-body{
+    width: 50%;
+    padding: 10%; 
+}
+
+.msg{
+    height: 60vh;
+    overflow: auto;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.msg_print{
+    padding-left: 20px;
+    display: flex;
+    
+    flex-direction: column;
+    color: black;
+    /* background-color: lightgrey; */
+    border-radius: 10px; 
+    height: 50px;
+    /* border: 1    px solid black; */
+    
+}
+.time{
+    flex: 1;
+}
+
+.msg_container{
+    flex: 5;
+}
+
+.author{
+    flex: 1;
+}
+
+.send{
+    margin-top: 10px;
+}
