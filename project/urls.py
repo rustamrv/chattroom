@@ -17,15 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-from accounts.views import  SignUp, LoginIn, SignOutView
+from accounts.views import  SignUp, LoginIn, SignOutView, SuccessToken
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('room.urls')),
+    path('api/', include('api.urls')),
     path('profile', include('accounts.urls')),
     path(r'signup/', SignUp.as_view(), name='signup'),
     path(r'login/', LoginIn.as_view(), name='login'),
     path(r'logout/', SignOutView.as_view(), name='logout'),
+    path(r'success/', SuccessToken.as_view(), name='success'),
 ]
 
 if settings.DEBUG:

@@ -1,3 +1,48 @@
 {% extends 'layout/base.html' %}
 
-{% load static %} 
+{% load static %}  
+
+{% block content %}
+<div class="container">
+  <div class="page"> 
+      {{object.full_name}}
+  </div>
+  <div class="page_detail"> 
+      <div class="page_column">
+        email: {{object.email}} </br>
+        birthday: {{object.birthday}}
+      </div> 
+  </div>
+  <div class="page_detail"> 
+    <div class="page_column">
+      email: {{object.email}} </br>
+      birthday: {{object.birthday}}
+    </div> 
+  </div>
+  <div class="send_post">
+    <textarea class="form-control" type="text" id="text"></textarea>
+    <div class="input-group-append cd">
+        <button type="button" id="chat-message-submit" class="btn btn-primary">Send</button>
+    </div> 
+  </div>
+  <div class="send_post1">
+    {% for item in posts %}  
+    <div class="msg_print"> 
+      <div class="msg_container">
+        <div class="up">
+          {{item.description}}
+        </div>
+         <div class="down">
+          <small>{{item.created_date|date:"Y-m-d H:i:s"}}
+          <a href="{% url 'profile' pk=item.author.id %}" class="">{{item.author}}</a></small>
+         </div>
+      </div> 
+  </div> 
+    {% endfor %}
+  </div>
+</div>
+<script src="{% static 'js/reconnecting-websocket.js' %}"> </script>
+<script>
+  
+</script>
+{% endblock %}

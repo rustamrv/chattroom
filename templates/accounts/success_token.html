@@ -11,8 +11,7 @@
                 {{error}}
             </div>
           {% endif %}
-          <div class="card-body">
-            <h3 class="card-title">Sign up</h3>
+          <div class="card-body"> 
             <form method="post" novalidate>
               {% csrf_token %}
               {% include 'layout/form.html' %}

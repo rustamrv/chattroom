@@ -11,7 +11,7 @@ import project.settings as setting
 
 redis_instance = redis.StrictRedis(host=setting.REDIS_HOST,
                                    port=setting.REDIS_PORT, db=0)
-
+# redis_instance = redis.Redis(setting.REDIS_HOST)
 
 User = get_user_model()
 
@@ -19,8 +19,7 @@ User = get_user_model()
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(max_length=100)
-
-
+ 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField(max_length=100)
@@ -33,16 +32,8 @@ class SignUpForm(UserCreationForm):
     def send_email(self, request, recip):
         sender = settings.EMAIL_HOST_USER
         gen = GenerationToken()
-        token = gen.make_token() 
-        context = {
-            'user': 'ffff',
-            'email': recip, 
-            'token': token
-        }
-        print(recip)
-        redis_instance.set(recip, context)
-        value = redis_instance.get(recip)
-        print(value)
+        token = gen.make_token()  
+        redis_instance.set(recip, token)  
         send_mail(
             'Register',
             'Hi, your token ' + token,
@@ -89,11 +80,8 @@ class ResetPassword(forms.Form):
         strip=False,
     )
 
-class SuccessToken(forms.Form):
-    token = forms.CharField(max_length=100)
-
-    def post(self, request, *args, **kwargs):
-        ...
+class SuccessTokenForm(forms.Form):
+    token = forms.CharField(max_length=200) 
 
 
 class DateInput(forms.DateInput):

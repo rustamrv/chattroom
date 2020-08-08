@@ -15,7 +15,7 @@
                     {{item.text}}
                 </div>
                 <div class="author">
-                    {{item.sender}}
+                    <a href="{% url 'profile' pk=item.sender.id %}" class="">{{item.sender}}</a>
                 </div> 
             </div> 
             {% endfor %}
@@ -28,8 +28,6 @@
         </div>
     </div>
 </div>
-
-
 <script src="{% static 'js/reconnecting-websocket.js' %}"> </script>
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {

@@ -50,7 +50,7 @@ class Profile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=255, default="Test")
     last_name = models.CharField(max_length=255, default="Test")
-    image = models.FileField(null=False, upload_to='upload/')
+    image = models.FileField(null=True, blank=True, upload_to='upload/')
     birthday = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -76,3 +76,20 @@ class Profile(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return self.last_name + ' ' + self.first_name
+
+
+class Post(models.Model):
+    name = models.CharField(max_length=60)
+    created_date = models.DateTimeField("Date created", auto_now=True,
+                                        auto_now_add=False)
+    author = models.ForeignKey(Profile, verbose_name="Автор поста",
+                               related_name="author_post", default='',
+                               on_delete=models.CASCADE)
+    recipient = models.ForeignKey(Profile, verbose_name="Получатель поста",
+                                  null=True, blank=True,
+                                  related_name="recipient_post",
+                                  on_delete=models.CASCADE)
+    description = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
