@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from accounts.models import Post, Profile
+from feed.models import Post
+from accounts.models import Profile
 
 
 class UserSerializer(serializers.ModelSerializer):

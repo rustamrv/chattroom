@@ -15,13 +15,20 @@ class ChatConsumer(WebsocketConsumer):
         self.send_message(content)
 
     def new_message(self, data):
+        # Get author profile by id
         author = data['from']
         author_user = Profile.objects.get(pk=author)
-        room = Room.objects.get_slug(self.room_name)
+        # Get room by id (pk)
+        room = Room.objects.filter(pk=self.room_name).first()
+        if not room:
+            # If room not found, do nothing
+            return
+        # Create new message
         message = Message.objects.create(
             sender=author_user,
             text=data['message'],
-            room=room[0])
+            room=room
+        )
         content = {
             'command': 'new_message',
             'message': self.message_to_json(message)
