@@ -1,13 +1,16 @@
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, SuccessTokenForm
+from .forms import SignUpForm, LoginForm
 from django.views import View
-from .models import Profile, Post
+from .models import Profile
+from feed.models import Post
+from feed.forms import PostForm
 from django.utils import timezone
 from django.views.generic import UpdateView, DetailView
 from .forms import UpdateForm
 from django.contrib.auth.views import LogoutView 
+from django.urls import reverse_lazy
 import redis  
 import project.settings as setting
 
@@ -15,61 +18,31 @@ redis_instance = redis.StrictRedis(host=setting.REDIS_HOST,
                                    port=setting.REDIS_PORT, db=0)
 
 
-class SuccessToken(View):
-    
-    def post(self, request, *args, **kwargs):
-        form = SuccessTokenForm(request.POST)
-        if form.is_valid():   
-            recip = request.session.get('email')
-            token = request.POST['token']  
-            value = redis_instance.get(recip)
-            value = value.decode(encoding='UTF-8')  
-            if value == token:
-                ob = EmailBackend()
-                result, user = ob.get_user_email(recip, True)
-                if result: 
-                    auth_login(request, user)
-                    return redirect('home') 
-                else:
-                    return redirect('home')
-            else:
-                return redirect('home')
-
-    def get(self, request, *args, **kwargs):
-        form = SuccessTokenForm()
-        context = {
-            'form': form,
-            'title': "Завершенние регистрация"
-        } 
-        return render(request, 'accounts/success_token.html', context)
-
 class SignUp(View):
 
     def get(self, request, *args, **kwargs):
         form = SignUpForm()
         context = {
             'form': form,
-            'title': "Регистрация"
+            'title': "Sign Up"
         }
         return render(request, 'accounts/signup.html', context)
 
     def post(self, request, *args, **kwargs):
         form = SignUpForm(request.POST)
         if form.is_valid(): 
-            form.send_email(request, request.POST['email']) 
             user = form.save() 
             ob = Profile.objects.get(id=user.id)        
-            ob.is_active = False
+            ob.is_active = True
             ob.save() 
-            request.session['email'] = request.POST['email'] 
-            return redirect("success")
+            return redirect("login")
         else:
             error = form.errors.as_json()
             form = SignUpForm() 
             context = {
                 'form': form,
                 'error': error,
-                'title': "Регистрация"
+                'title': "Sign Up"
             }
             return render(request, 'accounts/signup.html', context)
 
@@ -80,7 +53,7 @@ class LoginIn(View):
         form = LoginForm()
         context = {
             'form': form,
-            'title': "Вход"
+            'title': "Login"
         }
         return render(request, 'accounts/login.html', context)
 
@@ -98,15 +71,15 @@ class LoginIn(View):
                     context = {
                         'form': form,
                         'error': 'Disabled account',
-                        'title': 'Вход'
+                        'title': 'Login'
                     }
                     return render(request, 'accounts/login.html', context)
             else:
                 form = LoginForm()
                 context = {
                     'form': form,
-                    'error': 'Не правильный логин или пароль',
-                    'title': 'Вход'
+                    'error': 'Incorrect login or password',
+                    'title': 'Login'
                 }
                 return render(request, 'accounts/login.html', context)
 
@@ -115,14 +88,33 @@ class SignOutView(LogoutView):
     next_page = '/'
 
 
+class ProfileUpdateView(UpdateView):
+    model = Profile
+    form_class = UpdateForm
+    template_name = 'accounts/profile_form.html'
+    
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'pk': self.object.pk})
+
+
 class ProfileDetail(DetailView):
 
     model = Profile
-    template = 'profile_detail.html'
+    template_name = 'accounts/profile_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['now'] = timezone.now()
-        context["id_user"] = self.get_object().id 
-        context["posts"] = Post.objects.filter(recipient=self.get_object())
+        context['form'] = PostForm()
+        context['posts'] = Post.objects.filter(author=self.get_object()).order_by('-created_date')
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = self.request.user
+            post.name = f"Post by {post.author}"
+            post.save()
+            return redirect('profile', pk=self.kwargs['pk'])
+        else:
+            return self.get(request, *args, **kwargs)

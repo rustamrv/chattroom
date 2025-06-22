@@ -1,17 +1,30 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Room, MembersRoom, Message
 from django.views import View
 from accounts.models import Profile
+from .forms import RoomForm
+from django.urls import reverse_lazy
 
 
 class HomePage(View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context["title"] = "Чат комната"
+        context["title"] = "Chat Room"
         context["id_user"] = self.request.session.get('_auth_user_id')
         return render(request, 'home/home.html', context=context)
+
+
+class RoomCreate(CreateView):
+    model = Room
+    form_class = RoomForm
+    template_name = 'room/room_form.html'
+    success_url = reverse_lazy('room')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class RoomList(ListView):
@@ -19,7 +32,7 @@ class RoomList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) 
-        context["title"] = "Чат комната - все комнаты"
+        context["title"] = "Chattroom - All rooms"
         context['rooms'] = Room.objects.all() 
         context["id_user"] = self.request.session.get('_auth_user_id')
         return context
@@ -32,7 +45,7 @@ class My_Room(View):
         id = self.request.session.get('_auth_user_id')
         user = Profile.objects.get_id(id) 
         context["id_user"] = id
-        context["title"] = "Чат комната - мои комнаты"
+        context["title"] = "Chattroom - My rooms"
         context['rooms'] = Room.objects.get_myroom(user)
         return render(request, 'room/room_list.html', context=context)
 
@@ -40,7 +53,7 @@ class My_Room(View):
 class ChatDetail(DetailView):
 
     model = Room
-    template = 'chat_detail.html'
+    template_name = 'room/room_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs) 

@@ -1,0 +1,16 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Create Room{% endblock title %}
+
+{% block content %}
+<div class="auth-form">
+    <h2>Create a new Room</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        {% include 'layout/form.html' %}
+        
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</div>
+{% endblock %} 

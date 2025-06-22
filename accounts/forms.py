@@ -17,30 +17,40 @@ User = get_user_model()
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(max_length=100)
- 
-class SignUpForm(UserCreationForm):
-    email = forms.EmailField()
-    first_name = forms.CharField(max_length=100)
-    last_name = forms.CharField(max_length=100)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'your@email.com'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
+class SignUpForm(forms.ModelForm):
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('email', 'first_name', 'last_name')
 
-    def send_email(self, request, recip):
-        sender = settings.EMAIL_HOST_USER
-        gen = GenerationToken()
-        token = gen.make_token()  
-        redis_instance.set(recip, token)  
-        send_mail(
-            'Register',
-            'Hi, your token ' + token,
-            sender,
-            [recip],
-            fail_silently=False,
-            )  
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password'] != cd['password2']:
+            raise forms.ValidationError('Passwords don\'t match.')
+        return cd['password2']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
+
 
 class ResetForm(forms.Form):
     email = forms.EmailField()
@@ -79,10 +89,6 @@ class ResetPassword(forms.Form):
         widget=forms.PasswordInput,
         strip=False,
     )
-
-class SuccessTokenForm(forms.Form):
-    token = forms.CharField(max_length=200) 
-
 
 class DateInput(forms.DateInput):
     input_type = 'date'
