@@ -1,24 +1,39 @@
 {% comment %} {% load form_tags widget_tweaks %} {% endcomment %}
 
 {% if form.non_field_errors %}
-  <div class="alert alert-danger" role="alert">
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
     {% for error in form.non_field_errors %}
       <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
     {% endfor %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 {% endif %}
-   
-   {% for field in form.visible_fields %}
+
+{% for field in form %}
     <div class="form-group">
-      {{ field.label_tag }} 
-       {% if field.help_text %}
-      <small class="form-text text-muted">
-        {{ field.help_text|safe }}
-      </small>
-    {% endif %}
-      <div class="col-md-10 pull-right">
-         {{ field }}
-       </div>
+        <label for="{{ field.id_for_label }}">
+            {{ field.label }}
+            {% if field.field.required %}*{% endif %}
+        </label>
+        
+        {% if field.field.widget.input_type == 'textarea' %}
+            <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" rows="4" placeholder="{{ field.label }}">{{ field.value|default:'' }}</textarea>
+        {% elif field.field.widget.input_type == 'checkbox' %}
+            <div class="checkbox">
+                <input type="checkbox" name="{{ field.name }}" id="{{ field.id_for_label }}" {% if field.value %}checked{% endif %}>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            </div>
+        {% else %}
+            <input type="{{ field.field.widget.input_type|default:'text' }}" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" placeholder="{{ field.label }}" value="{{ field.value|default:'' }}">
+        {% endif %}
+        
+        {% if field.errors %}
+            <div class="error">
+                {% for error in field.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
-    
-  {% endfor %} 
+{% endfor %} 
